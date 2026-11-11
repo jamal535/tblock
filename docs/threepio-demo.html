@@ -1,0 +1,1186 @@
+<title>Threepio Walkthrough</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the tblock 101 "Imperial Ops" shell. A heavy sidebar (l0) holds the flows and the step list;
+   the reading pane (l2) holds the cast strip, then the step's story beside the screen it produces.
+   Midnight is home; light swaps values, never components. Amber marks threepio, green marks you. */
+:root {
+  --l0:#050505; --l1:#0b0b0b; --l2:#101010; --l3:#161616; --l4:#1c1c1c; --l5:#242424;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.11); --line-3:rgba(255,255,255,.18);
+  --fg:#ededed; --fg-2:#a3a3a3; --fg-3:#737373; --row-name:#d6d6d6;
+  --green:#45c47a; --amber:#e0a93e; --red:#f0565c;
+  --green-wash:color-mix(in srgb, var(--green) 10%, transparent); --green-edge:color-mix(in srgb, var(--green) 24%, transparent);
+  --amber-wash:color-mix(in srgb, var(--amber) 10%, transparent); --amber-edge:color-mix(in srgb, var(--amber) 28%, transparent);
+  --red-wash:color-mix(in srgb, var(--red) 9%, transparent); --red-edge:color-mix(in srgb, var(--red) 24%, transparent);
+  --primary:#fafafa; --primary-fg:#0a0a0a; --primary-hover:#e2e2e2;
+  --tint:rgba(255,255,255,.06); --tint-2:rgba(255,255,255,.07);
+  --well:rgba(0,0,0,.35); --well-2:rgba(0,0,0,.3); --card-edge:rgba(255,255,255,.03);
+  --focus-ring:rgba(255,255,255,.45); --selection:rgba(255,255,255,.22);
+  --shadow-pop:0 16px 40px rgba(0,0,0,.5);
+  --sans:'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --ease-out:cubic-bezier(.23,1,.32,1); --ease-in-out:cubic-bezier(.77,0,.175,1);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --l0:#efefef; --l1:#f7f7f7; --l2:#ffffff; --l3:#fafafa; --l4:#ececec; --l5:#e2e2e2;
+    --line:rgba(0,0,0,.07); --line-2:rgba(0,0,0,.1); --line-3:rgba(0,0,0,.2);
+    --fg:#171717; --fg-2:#525252; --fg-3:#737373; --row-name:#262626;
+    --green:#1f9d55; --amber:#a66a00; --red:#d42a31;
+    --primary:#171717; --primary-fg:#ffffff; --primary-hover:#333333;
+    --tint:rgba(0,0,0,.04); --tint-2:rgba(0,0,0,.05);
+    --well:rgba(255,255,255,.9); --well-2:rgba(0,0,0,.025); --card-edge:rgba(255,255,255,.8);
+    --focus-ring:rgba(0,0,0,.4); --selection:rgba(0,0,0,.12);
+    --shadow-pop:0 12px 32px rgba(0,0,0,.12);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"] {
+  --l0:#efefef; --l1:#f7f7f7; --l2:#ffffff; --l3:#fafafa; --l4:#ececec; --l5:#e2e2e2;
+  --line:rgba(0,0,0,.07); --line-2:rgba(0,0,0,.1); --line-3:rgba(0,0,0,.2);
+  --fg:#171717; --fg-2:#525252; --fg-3:#737373; --row-name:#262626;
+  --green:#1f9d55; --amber:#a66a00; --red:#d42a31;
+  --primary:#171717; --primary-fg:#ffffff; --primary-hover:#333333;
+  --tint:rgba(0,0,0,.04); --tint-2:rgba(0,0,0,.05);
+  --well:rgba(255,255,255,.9); --well-2:rgba(0,0,0,.025); --card-edge:rgba(255,255,255,.8);
+  --focus-ring:rgba(0,0,0,.4); --selection:rgba(0,0,0,.12);
+  --shadow-pop:0 12px 32px rgba(0,0,0,.12);
+  color-scheme:light;
+}
+:root[data-theme="dark"] { color-scheme:dark; }
+
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
+html, body { background:var(--l2); }
+body { margin:0; color:var(--fg); font:400 14px/1.5 var(--sans); -webkit-font-smoothing:antialiased; }
+::selection { background:var(--selection); }
+button { font:inherit; color:inherit; }
+:focus-visible { outline:2px solid var(--focus-ring); outline-offset:2px; }
+code, .mono { font-family:var(--mono); font-size:.93em; }
+
+/* ---------- shell ---------- */
+.shell { display:grid; grid-template-columns:248px minmax(0,1fr); min-height:100vh; }
+.side { background:var(--l0); border-right:1px solid var(--line); position:sticky; top:0; height:100vh; display:flex; flex-direction:column; gap:14px; padding:18px 12px 14px max(12px, env(safe-area-inset-left, 0px)); }
+.brand { display:flex; align-items:center; gap:10px; padding:2px 8px 6px; }
+.brand-mark { width:26px; height:26px; border-radius:6px; background:var(--primary); color:var(--primary-fg); display:grid; place-items:center; font:600 13px/1 var(--mono); letter-spacing:-.04em; }
+.brand-name { font-weight:600; letter-spacing:-.01em; }
+.brand-ver { margin-left:auto; font:400 11px var(--mono); color:var(--fg-3); }
+.nav-label { font-size:12px; color:var(--fg-3); padding:0 10px; margin-bottom:-8px; }
+.nav { display:flex; flex-direction:column; gap:2px; }
+.nav-item { height:34px; display:flex; align-items:center; gap:10px; padding:0 8px 0 10px; border-radius:7px; border:0; background:transparent; color:var(--fg-2); font-size:13px; font-weight:500; cursor:pointer; text-align:left; transition:background-color 120ms var(--ease-out), color 120ms var(--ease-out); }
+.nav-item svg { width:16px; height:16px; flex:none; opacity:.8; }
+.nav-item .kbd { margin-left:auto; }
+.nav-item .stat { width:6px; height:6px; border-radius:999px; flex:none; }
+.nav-item .stat.green { background:var(--green); } .nav-item .stat.amber { background:var(--amber); }
+.nav-item[aria-current="page"] { background:var(--l4); color:var(--fg); box-shadow:inset 0 0 0 1px var(--line); }
+@media (hover:hover) and (pointer:fine) { .nav-item:hover { background:var(--l3); color:var(--fg); } }
+
+.steps { position:relative; flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:1px; padding:2px; scrollbar-width:thin; }
+.step-btn { display:grid; grid-template-columns:22px minmax(0,1fr); gap:10px; align-items:center; text-align:left; padding:6px 10px; border-radius:8px; border:0; background:transparent; color:var(--fg-3); cursor:pointer; font-size:13px; font-weight:500; transition:background-color 120ms var(--ease-out), color 120ms var(--ease-out); }
+.step-btn .n { width:22px; height:22px; border-radius:999px; display:grid; place-items:center; font:500 11px var(--mono); color:var(--fg-3); box-shadow:inset 0 0 0 1px var(--line-2); font-variant-numeric:tabular-nums; }
+.step-btn.done { color:var(--fg-2); }
+.step-btn.done .n { color:var(--fg); box-shadow:inset 0 0 0 1px var(--line-3); }
+.step-btn[aria-current="step"] { background:var(--l4); color:var(--fg); box-shadow:inset 0 0 0 1px var(--line); }
+.step-btn[aria-current="step"] .n { background:var(--primary); color:var(--primary-fg); box-shadow:none; }
+@media (hover:hover) and (pointer:fine) { .step-btn:hover { background:var(--l3); color:var(--fg); } }
+
+.side-foot { display:flex; flex-direction:column; gap:2px; }
+.kbd { display:inline-grid; place-items:center; min-width:18px; height:18px; padding:0 5px; border-radius:4px; background:var(--tint); box-shadow:inset 0 0 0 1px var(--line); font:500 11px/1 var(--sans); color:var(--fg-2); }
+
+.btn { height:34px; display:inline-flex; align-items:center; gap:8px; padding:0 14px; border-radius:9px; border:0; font-size:13px; font-weight:500; cursor:pointer; transition:background-color 150ms var(--ease-out), transform 160ms var(--ease-out), opacity 150ms; white-space:nowrap; }
+.btn:active { transform:scale(.97); }
+.btn:disabled { opacity:.4; cursor:default; transform:none; }
+.btn-primary { background:var(--primary); color:var(--primary-fg); }
+.btn-primary .kbd { background:rgba(127,127,127,.18); box-shadow:none; color:inherit; }
+.btn-secondary { background:var(--l4); color:var(--fg); box-shadow:inset 0 0 0 1px var(--line-2); }
+.btn-ghost { background:transparent; color:var(--fg-2); }
+@media (hover:hover) and (pointer:fine) {
+  .btn-primary:not(:disabled):hover { background:var(--primary-hover); }
+  .btn-secondary:not(:disabled):hover { background:var(--l5); }
+  .btn-ghost:hover { background:var(--l3); color:var(--fg); }
+}
+.btn svg { width:15px; height:15px; }
+.side-btn { width:100%; justify-content:flex-start; height:32px; padding:0 10px; }
+.side-btn .kbd { margin-left:auto; }
+.side-btn[aria-pressed="true"] { background:var(--l3); color:var(--fg); }
+
+/* ---------- pane ---------- */
+.main { min-width:0; }
+.pane { max-width:1120px; margin:0 auto; padding:28px max(40px, env(safe-area-inset-right, 0px)) 64px 40px; display:flex; flex-direction:column; gap:22px; }
+.head { display:flex; flex-direction:column; gap:10px; }
+.eyebrow { font-size:12px; color:var(--fg-3); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.eyebrow .sep { opacity:.6; }
+h1 { font-size:26px; font-weight:600; line-height:1.2; letter-spacing:-.025em; margin:0; text-wrap:balance; max-width:760px; }
+h2 { font-size:20px; font-weight:600; line-height:1.25; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+.lead { font-size:17px; line-height:1.62; letter-spacing:-.005em; color:var(--fg-2); margin:0; max-width:68ch; }
+p { margin:0; color:var(--fg-2); line-height:1.6; max-width:68ch; }
+p strong { color:var(--fg); font-weight:500; }
+.meta { font-size:12px; color:var(--fg-3); }
+.toolbar { display:flex; gap:10px 16px; align-items:center; flex-wrap:wrap; }
+.toolbar .meta { margin-left:auto; }
+.ctl { display:flex; align-items:center; gap:8px; }
+.ctl-label { font-size:12px; color:var(--fg-3); }
+
+.seg { display:inline-flex; gap:2px; padding:2px; border-radius:9px; background:var(--well-2); box-shadow:inset 0 0 0 1px var(--line); max-width:100%; overflow-x:auto; }
+.seg button { height:28px; padding:0 10px; border-radius:7px; border:0; background:transparent; color:var(--fg-3); font-size:13px; font-weight:500; cursor:pointer; white-space:nowrap; transition:background-color 150ms var(--ease-out), color 150ms var(--ease-out); }
+.seg button[aria-pressed="true"] { background:var(--l4); color:var(--fg); box-shadow:inset 0 0 0 1px var(--line); }
+@media (hover:hover) and (pointer:fine) { .seg button:hover { color:var(--fg); } }
+
+.chip { display:inline-flex; align-items:center; height:20px; padding:0 8px; border-radius:999px; font-size:11px; font-weight:500; color:var(--fg-2); background:var(--tint); box-shadow:inset 0 0 0 1px var(--line); white-space:nowrap; }
+.chip.mono { font-family:var(--mono); font-weight:400; }
+.chip.fu { color:var(--amber); background:var(--amber-wash); box-shadow:inset 0 0 0 1px var(--amber-edge); }
+.pill { display:inline-flex; align-items:center; gap:6px; height:22px; padding:0 9px; border-radius:999px; font-size:12px; font-weight:500; white-space:nowrap; color:var(--fg-2); background:var(--tint); box-shadow:inset 0 0 0 1px var(--line); width:fit-content; }
+.pill::before { content:""; width:6px; height:6px; border-radius:999px; background:currentColor; }
+.pill.green, .pill.you { color:var(--green); background:var(--green-wash); box-shadow:inset 0 0 0 1px var(--green-edge); }
+.pill.amber, .pill.threepio { color:var(--amber); background:var(--amber-wash); box-shadow:inset 0 0 0 1px var(--amber-edge); }
+.pill.red { color:var(--red); background:var(--red-wash); box-shadow:inset 0 0 0 1px var(--red-edge); }
+
+.card { background:var(--l3); border-radius:12px; padding:14px 16px; box-shadow:inset 0 1px 0 var(--card-edge), inset 0 0 0 1px var(--line); }
+
+/* ---------- cast strip ---------- */
+.cast { position:relative; padding:16px 8px 14px; }
+.actors { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px; position:relative; z-index:1; }
+.actor { display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center; opacity:.45; transition:opacity .3s var(--ease-out); min-width:0; }
+.actor.on { opacity:1; }
+.badge { width:36px; height:36px; border-radius:9px; display:grid; place-items:center; background:var(--l4); box-shadow:inset 0 0 0 1px var(--line); color:var(--fg-2); transition:background-color .3s, color .3s, box-shadow .3s; }
+.badge svg { width:17px; height:17px; }
+.actor.on .badge { color:var(--fg); box-shadow:inset 0 0 0 1px var(--line-3); }
+.actor[data-a="threepio"].on .badge { color:var(--amber); background:var(--amber-wash); box-shadow:inset 0 0 0 1px var(--amber-edge), 0 0 0 4px var(--amber-wash); }
+.actor[data-a="you"].on .badge { color:var(--green); background:var(--green-wash); box-shadow:inset 0 0 0 1px var(--green-edge); }
+.actor b { font-weight:500; font-size:13px; color:var(--row-name); }
+.actor small { color:var(--fg-3); font-size:11.5px; line-height:1.3; }
+.track { position:absolute; left:8px; right:8px; top:34px; height:0; }
+.track .rail { position:absolute; left:12.5%; right:12.5%; top:0; border-top:1px dashed var(--line-2); }
+.track .lit { position:absolute; top:-1px; height:2px; background:var(--amber); opacity:0; border-radius:2px; transition:opacity .3s; }
+.track .lit.show { opacity:.6; }
+.mover { position:absolute; left:0; top:0; width:25%; transform:translateX(calc(var(--x, 0) * 100%)); }
+.mover.go { transition:transform .7s var(--ease-in-out); }
+.dot { position:absolute; left:50%; top:-4px; width:8px; height:8px; margin-left:-4px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 3px var(--amber-wash); opacity:0; transition:opacity .2s; }
+.dot.show { opacity:1; }
+.dot.pulse { animation:pulse 1.6s var(--ease-in-out) infinite; }
+@keyframes pulse { 50% { box-shadow:0 0 0 8px transparent; } }
+.msgchip { position:absolute; top:-10px; transform:translateX(-50%); z-index:2; font:500 11px/1 var(--mono); padding:4px 8px; border-radius:999px; background:var(--l3); box-shadow:inset 0 0 0 1px var(--amber-edge); color:var(--amber); white-space:nowrap; opacity:0; transition:opacity .25s var(--ease-out) .35s; }
+.msgchip.show { opacity:1; }
+
+/* ---------- stage ---------- */
+.stage { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:20px; align-items:start; }
+.story { display:flex; flex-direction:column; gap:14px; min-width:0; position:sticky; top:20px; }
+.meter { height:4px; border-radius:4px; background:var(--tint-2); overflow:hidden; }
+.meter i { display:block; height:100%; width:100%; background:var(--fg); transform-origin:left; transform:scaleX(var(--p, 0)); transition:transform 240ms var(--ease-out); }
+.story .step-eyebrow { font-size:12px; color:var(--fg-3); display:flex; gap:8px; align-items:center; }
+.story p { font-size:14.5px; }
+.reply { background:var(--well-2); border-radius:10px; padding:12px 14px; box-shadow:inset 0 0 0 1px var(--line); display:flex; flex-direction:column; gap:4px; }
+.reply .k { font-size:12px; font-weight:500; color:var(--fg-3); }
+.reply .v { color:var(--fg); font-weight:500; font-size:14px; line-height:1.45; }
+.reply .src { font:400 11.5px/1.4 var(--mono); color:var(--fg-3); }
+.notes { border-radius:10px; padding:12px 14px; box-shadow:inset 0 0 0 1px var(--line-2); background-image:repeating-linear-gradient(-45deg, transparent 0 6px, var(--tint) 6px 7px); }
+.notes .k { font-size:12px; font-weight:500; color:var(--fg-3); }
+.notes ul { margin:6px 0 0; padding-left:18px; color:var(--fg-2); display:grid; gap:4px; font-size:13px; }
+.step-nav { display:flex; align-items:center; justify-content:space-between; gap:8px; padding-top:4px; }
+
+.screen { background:var(--l1); border-radius:12px; box-shadow:0 0 0 1px var(--line-2), var(--shadow-pop); min-width:0; overflow:hidden; position:relative; }
+.screen::before { content:""; position:absolute; inset:0 0 auto; height:2px; background:var(--accent-now, transparent); transition:background .3s; z-index:1; }
+.screen[data-who="threepio"] { --accent-now:var(--amber); }
+.screen[data-who="you"] { --accent-now:var(--green); }
+.screen-bar { display:flex; align-items:center; gap:10px; height:38px; padding:0 12px; border-bottom:1px solid var(--line); background:var(--l3); }
+.lights { display:flex; gap:6px; }
+.lights i { width:10px; height:10px; border-radius:50%; background:var(--l5); box-shadow:inset 0 0 0 1px var(--line); }
+#screen-title { font:400 12px/1 var(--mono); color:var(--fg-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.speaker { margin-left:auto; flex:none; }
+.screen-body { padding:14px; display:grid; grid-template-columns:minmax(0,1fr); gap:12px; min-height:360px; align-content:start; background:var(--l2); }
+.enter > * { animation:rise .38s var(--ease-out) both; }
+.enter > *:nth-child(2) { animation-delay:.05s; } .enter > *:nth-child(3) { animation-delay:.1s; }
+.enter > *:nth-child(4) { animation-delay:.15s; } .enter > *:nth-child(5) { animation-delay:.2s; }
+@keyframes rise { from { opacity:0; transform:translateY(6px); } }
+
+/* terminal */
+pre.term { margin:0; padding:13px 15px; background:var(--l1); border-radius:10px; box-shadow:inset 0 0 0 1px var(--line); overflow-x:auto; font:400 12.5px/1.8 var(--mono); color:var(--fg-2); white-space:pre-wrap; overflow-wrap:break-word; }
+.term .p { color:var(--fg-3); user-select:none; }
+.term .d { color:var(--fg-3); }
+.term .g { color:var(--green); }
+.term .a { color:var(--amber); }
+.term .r { color:var(--red); }
+.term .k { color:var(--fg); }
+.term s { color:var(--fg-3); }
+.cap { font-size:12px; font-weight:500; color:var(--fg-3); margin-bottom:-4px; }
+
+/* ticket */
+.ticket { background:var(--l3); border-radius:12px; box-shadow:inset 0 1px 0 var(--card-edge), inset 0 0 0 1px var(--line); overflow:hidden; }
+.ticket.dropped { opacity:.6; }
+.t-head { display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; padding:9px 14px; border-bottom:1px solid var(--line); font:400 11.5px/1.3 var(--mono); color:var(--fg-3); }
+.t-head .state { display:inline-flex; align-items:center; gap:6px; height:20px; padding:0 8px; border-radius:999px; font:500 11px/1 var(--sans); color:var(--fg-2); background:var(--tint); box-shadow:inset 0 0 0 1px var(--line); }
+.t-head .state.new { color:var(--green); background:var(--green-wash); box-shadow:inset 0 0 0 1px var(--green-edge); }
+.t-head .state.drop { color:var(--red); background:var(--red-wash); box-shadow:inset 0 0 0 1px var(--red-edge); }
+.t-head .state.draft { color:var(--amber); background:transparent; box-shadow:none; outline:1px dashed var(--amber-edge); outline-offset:-1px; }
+.t-body { padding:13px 16px 15px; display:grid; gap:8px; }
+.t-title { font-weight:600; font-size:15px; line-height:1.35; letter-spacing:-.01em; }
+.ticket.dropped .t-title { text-decoration:line-through; text-decoration-color:var(--fg-3); }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.md h4 { margin:8px 0 2px; font-size:12.5px; font-weight:600; color:var(--fg); }
+.md p, .md ul { margin:0; color:var(--fg-2); font-size:13px; line-height:1.55; }
+.md ul { padding-left:18px; display:grid; gap:2px; }
+.md .add { background:var(--green-wash); box-shadow:-8px 0 0 var(--green-wash), -10px 0 0 var(--green); border-radius:0 4px 4px 0; }
+.md ul.todo { list-style:none; padding-left:0; }
+.md ul.todo li { display:grid; grid-template-columns:18px minmax(0,1fr); }
+.md ul.todo li::before { content:""; width:11px; height:11px; margin-top:4px; border-radius:3px; box-shadow:inset 0 0 0 1.5px var(--fg-3); }
+.why { font-size:12.5px; color:var(--fg-2); border-top:1px solid var(--line); padding-top:9px; }
+.why b { color:var(--fg); font-weight:500; }
+
+/* report */
+.report { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; }
+.remark { background:var(--amber-wash); border-radius:12px; padding:12px 14px; box-shadow:inset 0 0 0 1px var(--amber-edge); display:grid; grid-template-columns:auto minmax(0,1fr); gap:12px; align-items:start; }
+.remark .av { width:30px; height:30px; border-radius:8px; display:grid; place-items:center; color:var(--amber); background:var(--l2); box-shadow:inset 0 0 0 1px var(--amber-edge); }
+.remark .av svg { width:16px; height:16px; }
+.remark .k { font-size:12px; font-weight:500; color:var(--amber); }
+.remark p { margin:4px 0 0; color:var(--fg); font-style:italic; font-size:14px; }
+.block { background:var(--l3); border-radius:12px; padding:12px 14px; box-shadow:inset 0 1px 0 var(--card-edge), inset 0 0 0 1px var(--line); }
+.block .k { font-size:12px; font-weight:500; color:var(--fg-3); }
+.block ul { margin:6px 0 0; padding-left:18px; color:var(--fg-2); display:grid; gap:3px; font-size:13px; }
+.checks { display:grid; gap:9px; }
+.checks .row { display:grid; grid-template-columns:18px minmax(0,1fr); gap:2px 6px; font-size:13px; color:var(--fg); }
+.checks .row .m { color:var(--green); font-weight:600; }
+.checks .row .m.open { color:var(--amber); }
+.checks .row small { grid-column:2; color:var(--fg-3); font-family:var(--mono); font-size:11.5px; }
+
+/* chat */
+.msg { border-radius:12px; padding:10px 13px; max-width:92%; box-shadow:inset 0 0 0 1px var(--line); background:var(--l3); }
+.msg .from { font-size:11.5px; font-weight:500; color:var(--fg-3); margin-bottom:4px; }
+.msg p { margin:0; color:var(--fg); font-size:13.5px; }
+.msg p + p { margin-top:6px; }
+.msg ul { margin:6px 0; padding-left:18px; color:var(--fg-2); font-size:13.5px; }
+.msg.user { background:var(--green-wash); box-shadow:inset 0 0 0 1px var(--green-edge); justify-self:end; }
+.msg.user .from { color:var(--green); }
+.msg.droid { background:var(--amber-wash); box-shadow:inset 0 0 0 1px var(--amber-edge); }
+.msg.droid .from { color:var(--amber); }
+.msg .remark-line { font-style:italic; }
+.answers { display:flex; flex-wrap:wrap; gap:8px; }
+.answers button { height:34px; padding:0 14px; border-radius:9px; border:0; background:var(--l4); box-shadow:inset 0 0 0 1px var(--line-2); cursor:pointer; font-size:13px; font-weight:500; transition:background-color .15s, transform .12s var(--ease-out); }
+.answers button:active { transform:scale(.97); }
+.answers button.primary { background:var(--primary); color:var(--primary-fg); box-shadow:none; }
+.answers button[aria-pressed="true"] { outline:2px solid var(--green); outline-offset:2px; }
+.hint { font-size:12px; color:var(--fg-3); }
+.picker { display:inline-flex; align-items:center; gap:8px; justify-self:start; height:28px; padding:0 10px; border-radius:8px; font-size:12px; color:var(--fg-2); background:var(--l3); box-shadow:inset 0 0 0 1px var(--line-2); }
+.picker b { color:var(--amber); font-weight:500; }
+.handoff { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+.handoff .fake { height:32px; display:inline-flex; align-items:center; padding:0 12px; border-radius:8px; background:var(--primary); color:var(--primary-fg); font-size:13px; font-weight:500; }
+.handoff small { color:var(--fg-3); font-size:12px; }
+.cases { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; }
+.case { background:var(--l3); border-radius:12px; padding:12px 14px; box-shadow:inset 0 1px 0 var(--card-edge), inset 0 0 0 1px var(--line); display:grid; gap:5px; align-content:start; }
+.case b { font-weight:600; font-size:13.5px; }
+.case span { color:var(--fg-2); font-size:13px; }
+.case .then { font-size:12px; font-weight:500; color:var(--amber); }
+
+/* table */
+.tbl { background:var(--l3); border-radius:12px; box-shadow:inset 0 0 0 1px var(--line); overflow-x:auto; }
+table.roles { width:100%; border-collapse:collapse; font-size:13px; }
+.roles th { text-align:left; font-weight:400; font-size:12px; color:var(--fg-3); padding:10px 12px; }
+.roles td { padding:9px 12px; border-top:1px solid var(--line); color:var(--fg-2); vertical-align:top; }
+.roles td:first-child { color:var(--fg); font-weight:500; white-space:nowrap; }
+.roles .yes { color:var(--green); } .roles .no { color:var(--fg-3); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1080px) {
+  .stage { grid-template-columns:minmax(0,1fr); }
+  .story { position:static; }
+  .screen-body { min-height:0; }
+}
+@media (max-width: 780px) {
+  .shell { grid-template-columns:minmax(0,1fr); }
+  .side { position:sticky; top:env(safe-area-inset-top, 0px); z-index:10; height:auto; flex-direction:row; align-items:center; gap:8px; padding:8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); border-right:0; border-bottom:1px solid var(--line); }
+  body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:10; background:var(--l0); }
+  .brand { padding:0; }
+  .brand-name, .brand-ver, .nav-label, .steps, .side-btn span, .nav-item .kbd, .side-btn .kbd { display:none; }
+  .nav { flex-direction:row; overflow-x:auto; flex:1; min-width:0; }
+  .nav-item { flex:none; padding:0 10px; }
+  .nav-item svg { display:none; }
+  .side-foot { flex-direction:row; }
+  .side-btn { width:auto; padding:0 9px; }
+  .pane { padding:22px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
+  .toolbar .meta { margin-left:0; }
+  .cases { grid-template-columns:minmax(0,1fr); }
+}
+@media (max-width: 520px) {
+  h1 { font-size:22px; }
+  .lead { font-size:15px; }
+  .actor small, .msgchip, .speaker { display:none; }
+  .step-nav .kbd { display:none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+</style>
+
+<div class="shell">
+  <aside class="side" aria-label="Flows and steps">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">tb</div><span class="brand-name">tblock</span><span class="brand-ver">0.18.1</span></div>
+    <div class="nav-label">Threepio</div>
+    <nav class="nav" aria-label="Flows">
+      <button type="button" class="nav-item" id="flow-done" data-flow="done"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="2"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h2.5" stroke-linecap="round"/></svg>After the work<span class="stat green" aria-hidden="true"></span><span class="kbd">1</span></button>
+      <button type="button" class="nav-item" id="flow-life" data-flow="life"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8a5 5 0 1 1-1.5-3.6M13 2.5v2.5h-2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Full lifecycle<span class="stat amber" aria-hidden="true"></span><span class="kbd">2</span></button>
+    </nav>
+    <div class="nav-label">Steps</div>
+    <div class="steps" id="steps" role="tablist" aria-label="Steps"></div>
+    <div class="side-foot">
+      <button type="button" class="btn btn-ghost side-btn" id="notes-btn" aria-pressed="false"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3.5h10M3 6.5h10M3 9.5h6M3 12.5h4" stroke-linecap="round"/></svg><span>Speaker notes</span><span class="kbd">N</span></button>
+      <button type="button" class="btn btn-ghost side-btn" id="theme-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 0 0 0-11z" fill="currentColor"/></svg><span>Theme</span><span class="kbd">T</span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow"><span>tblock</span><span class="sep">/</span><span>Agents</span><span class="sep">/</span><span>threepio</span><span class="pill" id="status-pill"></span></div>
+        <h1 id="flow-title"></h1>
+        <p class="lead" id="flow-lead"></p>
+      </div>
+
+      <div class="toolbar">
+        <div class="ctl" id="harness-ctl"><span class="ctl-label">Harness</span>
+          <div class="seg" role="group" aria-label="Harness">
+            <button type="button" id="h-cc" data-harness="cc">Claude Code</button>
+            <button type="button" id="h-cp" data-harness="cp">Copilot</button>
+          </div>
+        </div>
+        <div class="ctl"><span class="ctl-label">Forge</span>
+          <div class="seg" role="group" aria-label="Forge">
+            <button type="button" id="f-gh" data-forge="gh">GitHub</button>
+            <button type="button" id="f-gl" data-forge="gl">GitLab</button>
+          </div>
+        </div>
+        <span class="meta">Example data from a fictional Republic repo</span>
+      </div>
+
+      <section class="card cast" aria-label="Who is involved">
+        <div class="track" aria-hidden="true">
+          <div class="rail"></div>
+          <div class="lit" id="lit"></div>
+          <div class="mover" id="mover"><div class="dot" id="dot"></div></div>
+          <div class="msgchip" id="msgchip"></div>
+        </div>
+        <div class="actors" id="actors"></div>
+      </section>
+
+      <div class="stage">
+        <section class="story" aria-live="polite">
+          <div id="story" style="display:contents"></div>
+          <div class="step-nav">
+            <button type="button" class="btn btn-secondary" id="prev"><span class="kbd">←</span>Back</button>
+            <span class="meta" id="stepcount"></span>
+            <button type="button" class="btn btn-primary" id="next">Next<span class="kbd">→</span></button>
+          </div>
+        </section>
+        <section class="screen" id="screen-panel" aria-label="What it looks like">
+          <div class="screen-bar"><div class="lights" aria-hidden="true"><i></i><i></i><i></i></div><span id="screen-title"></span><span class="pill speaker" id="speaker"><span id="speaker-name"></span></span></div>
+          <div class="screen-body" id="screen"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+const ICON = {
+  you: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5.5" r="2.5"/><path d="M3 13.5c.8-2.4 2.7-3.5 5-3.5s4.2 1.1 5 3.5" stroke-linecap="round"/></svg>',
+  main: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="2"/><path d="m5 7 2 1.5L5 10M8.5 10.5H11" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  threepio: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="2"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h2.5" stroke-linecap="round"/></svg>',
+  forge: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="4.5" cy="4" r="1.5"/><circle cx="4.5" cy="12" r="1.5"/><circle cx="11.5" cy="6.5" r="1.5"/><path d="M4.5 5.5v5M11.5 8c0 2-2 2.5-5.5 3" stroke-linecap="round"/></svg>'
+};
+const S = { flow:'done', i:0, harness:'cc', forge:'gh', choice:null, work:null, close:null, notes:false };
+try {
+  const saved = JSON.parse(localStorage.getItem('threepio-demo') || '{}');
+  if (saved.harness) S.harness = saved.harness;
+  if (saved.forge) S.forge = saved.forge;
+  if (typeof saved.notes === 'boolean') S.notes = saved.notes;
+} catch (e) {}
+try { const t = JSON.parse(localStorage.getItem('threepio-demo') || '{}').theme; if (t) S.theme = t; } catch (e) {}
+function save() { try { localStorage.setItem('threepio-demo', JSON.stringify({ harness:S.harness, forge:S.forge, notes:S.notes, theme:S.theme })); } catch (e) {} }
+function currentTheme() {
+  const set = document.documentElement.getAttribute('data-theme');
+  if (set === 'light' || set === 'dark') return set;
+  return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+function applyTheme() {
+  if (S.theme) document.documentElement.setAttribute('data-theme', S.theme);
+  const t = currentTheme();
+  document.querySelectorAll('[data-theme-pick]').forEach(b => b.setAttribute('aria-pressed', b.dataset.themePick === t));
+}
+function setTheme(t) { S.theme = t; save(); applyTheme(); }
+
+const gh = () => S.forge === 'gh';
+const forgeName = () => gh() ? 'GitHub' : 'GitLab';
+const REPO = 'galactic-republic/jedi-archives';
+const SKILL_PATH = () => (S.harness === 'cc'
+  ? '~/.claude/plugins/cache/plugins/tblock/0.18.1/skills/ticket-up/SKILL.md'
+  : '~/.copilot/installed-plugins/tblock/0.18.1/skills/ticket-up/SKILL.md').replace(/\//g, '/<wbr>');
+
+function term(lines) { return `<pre class="term">${lines}</pre>`; }
+function cap(t) { return `<div class="cap">${t}</div>`; }
+
+/* The example tickets. Written as a real team would: plain, in-universe, no jokes. */
+const TASK = {
+  num: 131,
+  title: 'Archive search returns nothing for Kamino',
+  labels: ['team-archives'],
+  weight: 1,
+  body: `<h4>Goal</h4><p>Archive search should find a star system even when its archive record has been deleted.</p>
+<h4>What changed</h4><ul><li><code>findSystem()</code> falls back to the navigation survey when the index has no record, and marks the result <code>recordRemoved</code>.</li><li>Added a regression test for a system whose record was removed.</li></ul>
+<h4>Verification</h4><ul><li><code>npm test -- archive</code>: 22 passed.</li><li>Searched for Kamino on a seeded copy of the index: found, flagged as removed. Before the fix it returned nothing.</li></ul>`
+};
+const FOLLOW = {
+  num: 147,
+  title: 'Log who deletes Archive records',
+  labels: ['team-archives', 'follow-up'],
+  weight: 3,
+  body: `<p>Follow-up to #131</p>
+<h4>What's left</h4><p><code>src/archive/index.ts</code> deletes a record with no audit entry. Kamino's record is gone, and nothing shows who removed it or when.</p>
+<h4>Why it matters</h4><p>Anyone with write access to the Archives can hide a system from search without a trace. The search fix shows the gap but cannot close it.</p>`
+};
+const DROPPED = {
+  title: 'Rename the search box to "Find a system"',
+  why: '<b>Dropped.</b> A tidy-up, not work someone needs to do. Ideas and "could also" items get no ticket.'
+};
+
+function ticket(t, opts) {
+  const state = opts.state === 'comment' ? `<span class="state">comment on #${t.num}</span>`
+    : opts.state === 'new' ? '<span class="state new">new issue</span>'
+    : opts.state === 'draft' ? '<span class="state draft">draft · not posted</span>'
+    : opts.state === 'posted' ? `<span class="state new">#${t.num} · open</span>`
+    : opts.state === 'mr' ? `<span class="state new">${MRW()} ${MRN()} · open</span>`
+    : '<span class="state drop">no ticket</span>';
+  const chips = (t.labels || []).map(l => `<span class="chip${l === 'follow-up' ? ' fu' : ''}">${esc(l)}</span>`).join('');
+  const weight = t.weight && !gh() ? `<span class="chip">weight ${t.weight}</span>` : '';
+  return `<article class="ticket${opts.state === 'drop' ? ' dropped' : ''}">
+    <div class="t-head">${state}<span>${REPO}${opts.state === 'comment' ? ' #' + t.num : ''}</span></div>
+    <div class="t-body">
+      <div class="t-title">${esc(t.title)}</div>
+      ${chips || weight ? `<div class="chips">${chips}${weight}</div>` : ''}
+      ${t.body ? `<div class="md">${t.body}</div>` : ''}
+      ${opts.why ? `<div class="why">${opts.why}</div>` : ''}
+    </div></article>`;
+}
+
+const STEPS_DONE = [
+  {
+    id:'done', short:'Work done', who:'main', on:['main'], from:'main',
+    title:'The fix is finished',
+    text:`tblock-mode just fixed a bug in the Jedi Archives: search returned nothing for a star system whose archive record had been deleted. The fix is committed on <strong>fix/archive-missing-systems</strong> and the checks passed.`,
+    more:`The project has a <code>.tblock/tickets.json</code>, so tblock-mode offers to write tickets for the work.`,
+    rule:'No tickets.json, no ticket prompt. A one-line fix, a question, or a task that changed nothing skips tickets.',
+    src:'skills/ticket-up/SKILL.md · Set up a project',
+    screenTitle:'jedi-archives · .tblock/tickets.json',
+    screen:() => cap('.tblock/tickets.json') + term(
+`{
+  <span class="k">"labels"</span>: [<span class="a">"team-archives"</span>],
+  <span class="k">"followUpLabel"</span>: <span class="a">"follow-up"</span>,
+  <span class="k">"weightScale"</span>: <span class="a">"1: under a day. 2: a few days. 3: about a week. 5: more than a week."</span>
+}`) + cap('branch') + term(
+`<span class="p">$ </span>git log --oneline main..fix/archive-missing-systems
+<span class="a">a41c9e2</span> Fall back to the nav survey when an archive record is missing
+<span class="a">7d03b18</span> Add a regression test for a system with a removed record`),
+    notes:['The main agent is the one running tblock-mode. Threepio has not started yet.','tickets.json is the opt-in. Labels go on every ticket, the follow-up label only on follow-ups, and the weight scale is the team\'s own.']
+  },
+  {
+    id:'brief', short:'Brief', who:'main', on:['main','threepio'], from:'main', to:'threepio', msg:'brief',
+    title:'The main agent briefs threepio',
+    text:`Ticket drafting goes to threepio, not to a general delegate. The brief gives four things: the path to ticket-up, the goal, the branch, and the checks with their results.`,
+    more:`It passes no model. Threepio runs on the session model in both harnesses.`,
+    rule:'A check the brief doesn\'t report can\'t go in the ticket\'s Verification.',
+    src:'agents/threepio.md · skills/tblock-mode/SKILL.md',
+    screenTitle:() => S.harness === 'cc' ? 'Claude Code · Agent tool call' : 'GitHub Copilot · task tool call',
+    screen:() => term(
+(S.harness === 'cc'
+? `<span class="k">Agent</span>({
+  subagent_type: <span class="a">"tblock:threepio"</span>,
+  description: <span class="a">"Draft tickets for the archive fix"</span>,
+  prompt: <span class="a">\`</span>`
+: `<span class="k">task</span>({
+  agent_type: <span class="a">"threepio"</span>,
+  description: <span class="a">"Draft tickets for the archive fix"</span>,
+  prompt: <span class="a">\`</span>`) +
+`
+  <span class="a">ticket-up</span>  <span class="d">${SKILL_PATH()}</span>
+
+  <span class="a">Goal</span>       Archive search should find a system even
+             when its archive record was deleted.
+
+  <span class="a">Branch</span>     fix/archive-missing-systems <span class="d">(2 commits)</span>
+
+  <span class="a">Checks</span>     npm test -- archive
+               <span class="g">✓ passed, 22 tests</span>
+             search "Kamino" on a seeded index
+               <span class="g">✓ found, flagged "record removed"</span>
+               <span class="d">(was: no results)</span>
+
+  <span class="a">Not checked</span>
+             who deleted the record, or when.
+  <span class="a">\`</span>
+})
+<span class="d">// no model argument: threepio uses the session model</span>`),
+    notes:['Point at "Not checked". Threepio will carry that through instead of guessing.','Flip the Harness toggle to show the same brief as a Copilot task call.']
+  },
+  {
+    id:'skill', short:'Reads skill', who:'threepio', on:['threepio'], from:'threepio',
+    title:'It reads ticket-up before anything else',
+    text:`Threepio's first move is to read the ticket-up skill in full, from the path in its brief. That file holds the ticket shapes and the rules for follow-ups.`,
+    more:`With no path in the brief, it looks in the installed plugins and takes the highest tblock version. If it finds no copy, it reports that instead of writing tickets without it.`,
+    rule:'No skill, no tickets. Threepio never drafts from memory.',
+    src:'agents/threepio.md · first paragraph of the job',
+    screenTitle:'threepio · subagent',
+    screen:() => term(
+`<span class="a">●</span> Read <span class="k">${SKILL_PATH()}</span>
+  <span class="d">└ 70 lines</span>
+
+<span class="d">  Sections found:</span>
+  <span class="g">✓</span> Set up a project
+  <span class="g">✓</span> Draft     <span class="d">← threepio's part</span>
+  <span class="g">✓</span> Create    <span class="d">← the main agent's part, after a yes</span>`),
+    notes:['The split matters: threepio owns Draft, the main agent owns Create.']
+  },
+  {
+    id:'evidence', short:'Reads diff', who:'threepio', on:['threepio'], from:'threepio',
+    title:'It reads what actually happened',
+    text:`Next it reads the commits and the diff. Every claim in a ticket has to come from these, a linked PR, or the brief.`,
+    more:`It never writes what the work was <em>probably</em> meant to do.`,
+    rule:'A claim comes from the diff, the commits, a linked MR or PR, or the brief.',
+    src:'agents/threepio.md · step 1',
+    screenTitle:'threepio · git',
+    screen:() => term(
+`<span class="p">$ </span>git diff --stat main...fix/archive-missing-systems
+ src/archive/search.ts         | 24 <span class="g">+++++++</span><span class="r">--</span>
+ src/archive/navSurvey.ts      | 11 <span class="g">++++</span>
+ test/search.removed.test.ts   | 38 <span class="g">++++++++++++</span>
+ 3 files changed, 66 insertions(+), 7 deletions(-)`) + term(
+` export function findSystem(name: string) {
+<span class="r">-  return index.get(name) ?? null;</span>
+<span class="g">+  const record = index.get(name);</span>
+<span class="g">+  if (record) return record;</span>
+<span class="g">+  const survey = navSurvey.lookup(name);</span>
+<span class="g">+  return survey ? { ...survey, recordRemoved: true } : null;</span>
+ }`),
+    notes:['The ticket\'s "What changed" bullets come straight from this hunk.']
+  },
+  {
+    id:'search', short:'Searches', who:'threepio', on:['threepio','forge'], from:'threepio', to:'forge', msg:'search, read-only',
+    title:() => `It searches ${forgeName()}, read-only`,
+    text:() => `Threepio checks it is logged in, then searches for a ticket that already covers the work. It finds <strong>#131</strong>, so the work becomes a comment on that ticket instead of a new one.`,
+    more:`It runs a second search for each follow-up, to avoid a duplicate. Searching is the only thing it does on the forge.`,
+    rule:'Read-only searches are fine. It never creates, edits, closes, or comments.',
+    src:'agents/threepio.md · steps 2 and 3',
+    screenTitle:() => `threepio · ${gh() ? 'gh' : 'glab'}`,
+    screen:() => term(gh()
+? `<span class="p">$ </span>gh auth status
+<span class="g">✓</span> Logged in to github.com
+
+<span class="p">$ </span>gh issue list --state all --search "archive search missing system"
+<span class="a">#131</span>  Archive search returns nothing for Kamino   <span class="g">open</span>   team-archives
+
+<span class="p">$ </span>gh issue list --state all --search "archive record deletion audit"
+<span class="d">No issues match your search</span>`
+: `<span class="p">$ </span>glab auth status
+<span class="g">✓</span> Logged in to gitlab.com
+
+<span class="p">$ </span>glab issue list --all --search "archive search missing system"
+<span class="a">#131</span>  Archive search returns nothing for Kamino   <span class="g">opened</span>   team-archives
+
+<span class="p">$ </span>glab issue list --all --search "archive record deletion audit"
+<span class="d">No issues match your search</span>`),
+    notes:['If the forge can\'t be reached, threepio says the duplicate search didn\'t run. It doesn\'t pretend.','Flip Forge to GitLab: same rules, glab commands.']
+  },
+  {
+    id:'task', short:'Drafts update', who:'threepio', on:['threepio'], from:'threepio',
+    title:'It drafts the update for #131',
+    text:`The task gets a goal, what changed, and how it was verified. Verification lists only the two checks from the brief, with their results.`,
+    more:() => gh() ? `GitHub tickets have no weight, so none is set.` : `#131 has no weight yet, so threepio suggests 1 from the team's scale. It never changes a weight someone already set.`,
+    rule:'Written with technical-writing, then unslop. A teammate with no memory of the chat can act on it.',
+    src:'skills/ticket-up/SKILL.md · Draft, steps 3 and 5',
+    screenTitle:'threepio · draft 1 of 2',
+    screen:() => ticket(TASK, { state:'comment' }),
+    notes:['Read the ticket aloud. No droid, no jokes. It reads like any engineer wrote it.']
+  },
+  {
+    id:'followups', short:'Follow-ups', who:'threepio', on:['threepio'], from:'threepio',
+    title:'It keeps real follow-ups and drops ideas',
+    text:`A follow-up is work someone needs to do: something left unfinished, or a bug or risk the task found. The missing audit trail is a real risk, so it gets a ticket. Renaming the search box is a tidy-up, so it doesn't.`,
+    more:`A task with no follow-ups is a normal result.`,
+    rule:'"Could also", tidy-ups, and ideas get no ticket.',
+    src:'skills/ticket-up/SKILL.md · Draft, step 4',
+    screenTitle:'threepio · draft 2 of 2',
+    screen:() => ticket(FOLLOW, { state:'new' }) + ticket(DROPPED, { state:'drop', why:DROPPED.why }),
+    notes:['The follow-up names the file and the gap that make it real.','This filter is what keeps the backlog from filling up with noise.']
+  },
+  {
+    id:'report', short:'Reports', who:'threepio', on:['threepio','main'], from:'threepio', to:'main', msg:'report + drafts',
+    title:'It reports back, in character',
+    text:`Threepio ends with a fixed report: a remark, the drafts ready to paste, and everything it couldn't confirm. The droid lives in the remark only.`,
+    more:`Its parent reads the remark. Teammates read the tickets.`,
+    rule:'Personality goes in remarks to the parent, never in a ticket.',
+    src:'agents/threepio.md · the report',
+    screenTitle:'threepio → main agent',
+    screen:() => `<div class="report">
+      <div class="remark"><div class="av">${ICON.threepio}</div><div><div class="k">Remark</div><p>Oh dear. An entire star system missing from the Archives, and the original ticket said only "search broken". I have put the paperwork in order. The follow-up about deletions is, I'm sorry to say, quite real.</p></div></div>
+      <div class="block"><div class="k">Drafts</div><ul>
+        <li>Comment on #131, "Archive search returns nothing for Kamino"${gh() ? '' : ', set weight 1'}</li>
+        <li>New: "Log who deletes Archive records", labels team-archives, follow-up${gh() ? '' : ', weight 3'}</li>
+      </ul></div>
+      <div class="block"><div class="k">Unconfirmed</div><ul>
+        <li>Who deleted Kamino's record. The brief doesn't say, so no ticket claims it.</li>
+        <li>No PR is linked yet, so the comment has no <code>Closes #131</code>.</li>
+      </ul></div></div>`,
+    notes:['Read the remark in the voice. Then point out the tickets themselves stayed plain.','"Unconfirmed" is how it stays honest about gaps.']
+  },
+  {
+    id:'approve', short:'You approve', who:'you', on:['main','you'], from:'main', to:'you', msg:'one question',
+    title:'You approve in one question',
+    text:`The main agent shows you threepio's drafts unchanged and names each ticket it will touch, all in one question. Nothing is created until you give a clear yes.`,
+    more:`Try an answer below. Whatever you cut is dropped.`,
+    rule:'Every draft, one question, and a clear yes before anything is created.',
+    src:'skills/ticket-up/SKILL.md · Create, step 1',
+    screenTitle:'chat · main agent',
+    screen:() => {
+      const a = S.choice;
+      const reply = a === 'yes' ? 'Yes, both.' : a === 'drop' ? 'Comment on #131, but drop the follow-up.' : a === 'no' ? 'Not now.' : '';
+      return `<div class="msg agent"><div class="from">Main agent</div>
+        <p>Threepio drafted two tickets for the archive fix, pasted above unchanged. OK to:</p>
+        <ul><li>comment on <b>#131</b> "Archive search returns nothing for Kamino"${gh() ? '' : ' and set its weight to 1'}</li>
+        <li>create <b>"Log who deletes Archive records"</b> as a follow-up?</li></ul></div>
+        <div class="answers" role="group" aria-label="Your answer">
+          <button type="button" id="ans-yes" class="primary" data-choice="yes" aria-pressed="${a === 'yes'}">Yes, both</button>
+          <button type="button" id="ans-drop" data-choice="drop" aria-pressed="${a === 'drop'}">Drop the follow-up</button>
+          <button type="button" id="ans-no" data-choice="no" aria-pressed="${a === 'no'}">Not now</button>
+        </div>
+        ${reply ? `<div class="msg user"><div class="from">You</div><p>${reply}</p></div>` : '<div class="hint">Pick an answer, or press → to answer "Yes, both".</div>'}`;
+    },
+    notes:['Let someone in the room pick the answer. The next step changes with it.']
+  },
+  {
+    id:'create', short:'Creates', who:'main', on:['main','forge'], from:'main', to:() => S.choice === 'no' ? null : 'forge', msg:'post, after yes',
+    title:() => S.choice === 'no' ? 'Nothing is posted' : 'The main agent posts them',
+    text:() => S.choice === 'no'
+      ? `You said not now, so nothing reaches ${forgeName()}. The drafts stay in the chat for later.`
+      : `The main agent runs Create, not threepio. It writes each body to a temp file outside the repo, posts the task first because a follow-up needs its number, then reads each one back.`,
+    more:() => S.choice === 'no' ? 'Threepio never had the power to post anyway.' : `With no PR yet, #131 stays open until the change lands, and the reply says so.`,
+    rule:'Threepio drafts. The main agent creates, after your yes.',
+    src:'skills/ticket-up/SKILL.md · Create, steps 2 and 3',
+    screenTitle:() => `main agent · ${gh() ? 'gh' : 'glab'}`,
+    screen:() => {
+      if (S.choice === 'no') return term(`<span class="d">No commands run. 0 tickets created, 0 comments.</span>`);
+      const drop = S.choice === 'drop';
+      let t;
+      if (gh()) {
+        t = `<span class="p">$ </span>gh issue comment 131 --body-file /tmp/tblock/131-comment.md
+<span class="g">✓</span> https://github.com/${REPO}/issues/131#issuecomment-2210457`;
+        if (!drop) t += `
+
+<span class="p">$ </span>gh issue create --title "Log who deletes Archive records" \\
+    --body-file /tmp/tblock/followup-1.md --label "team-archives,follow-up"
+<span class="g">✓</span> https://github.com/${REPO}/issues/147
+
+<span class="p">$ </span>gh issue view 147
+<span class="d">Log who deletes Archive records #147 · open · team-archives, follow-up</span>`;
+      } else {
+        t = `<span class="p">$ </span>glab issue note 131 --message "$(cat /tmp/tblock/131-comment.md)"
+<span class="g">✓</span> https://gitlab.com/${REPO}/-/issues/131#note_88123
+
+<span class="p">$ </span>glab issue update 131 --weight 1
+<span class="d">  #131 had no weight, so setting one is allowed</span>`;
+        if (!drop) t += `
+
+<span class="p">$ </span>glab issue create --title "Log who deletes Archive records" \\
+    --description-file /tmp/tblock/followup-1.md \\
+    --label "team-archives,follow-up" --weight 3 --linked-issues 131 --yes
+<span class="g">✓</span> https://gitlab.com/${REPO}/-/issues/147
+
+<span class="p">$ </span>glab issue view 147
+<span class="d">Log who deletes Archive records #147 · open · weight 3 · linked #131</span>`;
+      }
+      return term(t) + `<div class="msg agent"><div class="from">Main agent</div><p>Commented on #131${drop ? '' : ' and created follow-up #147, "Log who deletes Archive records"'}. ${drop ? 'Dropped the follow-up, as you asked. ' : ''}No PR is open yet, so #131 stays open until the fix lands.</p></div>`;
+    },
+    notes:['Go back one step and pick a different answer to show the commands change.']
+  },
+  {
+    id:'recap', short:'Recap', who:'main', on:['you','main','threepio','forge'], from:null,
+    title:'Who does what',
+    text:`Threepio is a drafter with good manners and no posting rights. The main agent owns the forge, and you own the yes.`,
+    more:`Threepio also edits no files in the repo and never pushes.`,
+    rule:'Drafts in, approval, then posts out. In that order, every time.',
+    src:'agents/threepio.md · step 3, "Stop there"',
+    screenTitle:'summary',
+    screen:() => `<div class="tbl"><table class="roles">
+      <thead><tr><th></th><th>Threepio</th><th>Main agent</th><th>You</th></tr></thead>
+      <tbody>
+        <tr><td>Read the diff and skill</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">—</td></tr>
+        <tr><td>Search the forge</td><td class="yes">Read-only</td><td class="yes">Yes</td><td class="no">—</td></tr>
+        <tr><td>Draft tickets</td><td class="yes">Yes</td><td class="no">Shows them unchanged</td><td class="no">—</td></tr>
+        <tr><td>Approve</td><td class="no">Never</td><td class="no">Asks once</td><td class="yes">Yes</td></tr>
+        <tr><td>Create or comment</td><td class="no">Never</td><td class="yes">After your yes</td><td class="no">—</td></tr>
+        <tr><td>Push, post, edit files</td><td class="no">Never</td><td class="no">Per playbook</td><td class="no">—</td></tr>
+        <tr><td>Crack jokes</td><td class="yes">In remarks</td><td class="no">—</td><td class="no">—</td></tr>
+      </tbody></table></div>`,
+    notes:['Close on the table. The point to leave people with: drafting is cheap to delegate, posting stays with a person.']
+  }
+];
+
+/* ---------- Proposed: the full lifecycle, with threepio as the chat agent you talk to ---------- */
+const MRW = () => gh() ? 'PR' : 'MR';
+const MRN = () => gh() ? '#58' : '!58';
+const CLI = () => gh() ? 'gh' : 'glab';
+const you = t => `<div class="msg user"><div class="from">You</div><p>${t}</p></div>`;
+const droid = (remark, t) => `<div class="msg droid"><div class="from">threepio</div>${remark ? `<p class="remark-line">${remark}</p>` : ''}${t ? `<p>${t}</p>` : ''}</div>`;
+const agent = t => `<div class="msg agent"><div class="from">tblock-mode</div><p>${t}</p></div>`;
+
+const LT_TITLE = 'Archive search returns nothing for systems with a deleted record';
+function lifeTicket(stage) {
+  const add = stage === 'refined-diff' ? ' class="add"' : '';
+  const refined = stage !== 'draft';
+  return {
+    num:131, title:LT_TITLE, labels:['team-archives'], weight:2,
+    body:`<h4>Goal</h4><p>Archive search should find a star system even when its archive record has been deleted. Reported for Kamino.</p>
+<h4>Context</h4><p>The navigation survey still has Kamino's coordinates, but <code>findSystem()</code> reads only the archive index, so search returns nothing. The record was removed by a purge of stale systems.</p>
+<h4>Where in the code</h4><p><code>src/archive/search.ts</code>, <code>findSystem()</code>. Three callers: the holomap, the nav console, and the Temple kiosk.</p>
+<h4>Done when</h4><ul class="todo"><li>Searching for Kamino returns the system, flagged as having a removed record.</li><li>A regression test covers a system with a removed record.</li>${refined ? `<li${add}>The holomap shows the flag.</li>` : ''}</ul>
+${refined ? `<h4${add}>Out of scope</h4><p${add}>Restoring Kamino's deleted record, and finding out who deleted it.</p>` : ''}`
+  };
+}
+
+const STEPS_LIFE = [
+  {
+    id:'l-ask', short:'You ask', who:'you', on:['you','threepio'], from:'you', to:'threepio', msg:'write me a ticket',
+    title:'You ask threepio for a ticket',
+    text:`In VS Code you pick <strong>threepio</strong> in the chat's agent picker and describe the task in your own words. The more detail you give, the better the ticket.`,
+    more:`Talking to it directly changes one thing: threepio can now ask you, so it can act after a clear yes. When another agent spawns it, it still only drafts.`,
+    rule:'Same droid, two modes. Spawned by an agent, it drafts. Talking to you, it asks first, then acts.',
+    src:'Proposed · agents/threepio.md',
+    screenTitle:'VS Code · chat',
+    screen:() => `<div class="picker">Agent: <b>threepio</b> ▾</div>` +
+      you(`I've got a task. Archive search returns nothing for Kamino, even though the nav charts show the system is there. Write me a ticket.`) +
+      droid(`A ticket <em>before</em> the work. How wonderfully orderly.`, `Let me check the forge and the code before I write anything.`),
+    notes:['This is the big shift: threepio is the agent in the chat, not a helper behind the scenes.','You could do this without tblock-mode at all.']
+  },
+  {
+    id:'l-research', short:'Researches', who:'threepio', on:['threepio','forge'], from:'threepio', to:'forge', msg:'duplicate search',
+    title:'It researches before it writes',
+    text:`It searches for a duplicate ticket, then uses tblock's read-only skills to fill in what you didn't say: <strong>how</strong> for where the code lives, <strong>blast-radius</strong> for what else it touches, and <strong>why</strong> for how it got this way.`,
+    more:`It reads. It doesn't change a file.`,
+    rule:'Every line in the ticket comes from your words, the code, or the forge.',
+    src:'Proposed · uses how, blast-radius, why',
+    screenTitle:() => `threepio · ${CLI()} and tblock skills`,
+    screen:() => term(
+`<span class="p">$ </span>${gh() ? 'gh issue list --state all' : 'glab issue list --all'} --search "archive search kamino"
+<span class="d">No issues match your search</span>`) + term(
+`<span class="a">how</span>           findSystem() in src/archive/search.ts
+              reads the archive index only
+<span class="a">blast-radius</span>  3 callers: holomap, nav-console,
+              temple-kiosk
+<span class="a">why</span>           7f2c1d0 "Purge stale systems from the
+              index" removed Kamino's record`),
+    notes:['Point out the "Where in the code" section on the next step comes straight from this.']
+  },
+  {
+    id:'l-draft', short:'Drafts', who:'threepio', on:['threepio','you'], from:'threepio', to:'you', msg:'draft',
+    title:'It drafts the ticket',
+    text:`The draft says the goal, the context, where the code is, and what "done" means as a checklist. That checklist is what threepio checks against when it closes the ticket.`,
+    more:() => gh() ? `GitHub tickets have no weight, so none is shown.` : `Labels and weight come from <code>.tblock/tickets.json</code>.`,
+    rule:'Nothing is posted yet. It\'s a draft in the chat.',
+    src:'Proposed · ticket-up, write from a goal',
+    screenTitle:'threepio · draft',
+    screen:() => ticket(lifeTicket('draft'), { state:'draft' }),
+    notes:['"Done when" is the important section. It becomes the close-out checklist at the end.']
+  },
+  {
+    id:'l-refine', short:'You refine', who:'you', on:['you','threepio'], from:'you', to:'threepio', msg:'add this',
+    title:'You refine it in chat',
+    text:`You add what you know. Threepio updates the draft and highlights what changed.`,
+    more:`Go back and forth as many times as you like.`,
+    rule:'Nothing is posted while you go back and forth.',
+    src:'Proposed · ticket-up, write from a goal',
+    screenTitle:'VS Code · chat',
+    screen:() => you(`Add that the holomap has to show the flag too. And we're not restoring the record itself, that's a different job.`) +
+      droid('', `Updated. One new "Done when" item and an "Out of scope" section:`) +
+      ticket(lifeTicket('refined-diff'), { state:'draft' }),
+    notes:['Green lines are the changes. Same idea as reviewing a diff.']
+  },
+  {
+    id:'l-create', short:'Creates', who:'threepio', on:['you','threepio','forge'], from:'threepio', to:'forge', msg:'create, after yes',
+    title:'It creates the ticket after your yes',
+    text:() => `Threepio asks once and names exactly what it will create. On a clear yes it creates the ticket in ${forgeName()} and reads it back before it says it's done.`,
+    more:`Before work starts, later edits change the description. Once work starts, they become comments, so the history stays visible.`,
+    rule:'One question, a clear yes, then it posts. A yes covers that ticket and nothing else.',
+    src:'Proposed · ticket-up, Create',
+    screenTitle:() => `threepio · ${CLI()}`,
+    screen:() => droid('', `Create this in <b>${REPO}</b>, labelled team-archives${gh() ? '' : ', weight 2'}?`) + you('Yes.') +
+      term(gh()
+? `<span class="p">$ </span>gh issue create --title "${LT_TITLE}" \\
+    --body-file /tmp/tblock/131.md --label "team-archives"
+<span class="g">✓</span> https://github.com/${REPO}/issues/131
+
+<span class="p">$ </span>gh issue view 131
+<span class="d">#131 · open · team-archives</span>`
+: `<span class="p">$ </span>glab issue create --title "${LT_TITLE}" \\
+    --description-file /tmp/tblock/131.md --label "team-archives" --weight 2 --yes
+<span class="g">✓</span> https://gitlab.com/${REPO}/-/issues/131
+
+<span class="p">$ </span>glab issue view 131
+<span class="d">#131 · open · team-archives · weight 2</span>`),
+    notes:['It reads the ticket back before claiming it exists. Same rule as the built flow.']
+  },
+  {
+    id:'l-start', short:'Starts work', who:'threepio', on:['you','threepio'], from:'threepio', to:'you', msg:'start the work?',
+    title:'It offers to start the work',
+    text:`Threepio asks if you want to start. On a yes it updates main and creates a branch named after the ticket.`,
+    more:`Then it asks who's doing the work. Pick one below.`,
+    rule:'The branch name carries the ticket number. Everything after this reads it from there.',
+    src:'Proposed · ticket-up, start the work',
+    screenTitle:'threepio · git',
+    screen:() => {
+      const w = S.work;
+      return droid(`#131 is up, and the paperwork is in order.`, `Start the work?`) + you('Yes.') + term(
+`<span class="p">$ </span>git switch main && git pull --ff-only
+<span class="p">$ </span>git switch -c <span class="a">131-archive-missing-systems</span>
+<span class="d">Switched to a new branch '131-archive-missing-systems'</span>`) +
+      droid('', `Who's doing the work?`) +
+      `<div class="answers" role="group" aria-label="Who does the work">
+        <button type="button" id="work-tblock" class="primary" data-work="tblock" aria-pressed="${w === 'tblock'}">Hand it to tblock-mode</button>
+        <button type="button" id="work-self" data-work="self" aria-pressed="${w === 'self'}">I'll code it myself</button>
+      </div>` + (w ? you(w === 'tblock' ? 'Hand it to tblock-mode.' : "I'll code it myself.") : '<div class="hint">Pick one, or press → to hand it to tblock-mode.</div>');
+    },
+    onLeave:() => { if (!S.work) S.work = 'tblock'; },
+    notes:['Let the room pick. The next step changes with the answer.']
+  },
+  {
+    id:'l-work', short:'Work', who:() => S.work === 'self' ? 'you' : 'main',
+    on:() => S.work === 'self' ? ['you'] : ['threepio','main'],
+    from:() => S.work === 'self' ? 'you' : 'threepio', to:() => S.work === 'self' ? null : 'main', msg:'hand off #131',
+    title:() => S.work === 'self' ? 'You do the work yourself' : 'tblock-mode picks up #131',
+    text:() => S.work === 'self'
+      ? `Threepio doesn't need tblock-mode. You code on the branch as normal, and threepio waits.`
+      : `tblock-mode sees the ticket number at the start of the branch name and reads #131 as the task's goal. Nobody has to explain the task twice.`,
+    more:() => S.work === 'self'
+      ? `The branch name is all threepio needs to find the ticket later.`
+      : `A "Start with tblock-mode" button would need VS Code's agent handoffs. That isn't verified yet.`,
+    rule:'The ticket is the goal. The branch name is the link.',
+    src:'Proposed · tblock-mode reads the ticket from the branch',
+    screenTitle:() => S.work === 'self' ? 'you · git' : 'tblock-mode · bug-fix playbook',
+    screen:() => S.work === 'self'
+      ? term(`<span class="p">$ </span>git log --oneline main..HEAD
+<span class="a">a41c9e2</span> Fall back to the nav survey when an archive record is missing
+<span class="a">7d03b18</span> Add a regression test for a system with a removed record`)
+      : `<div class="handoff"><span class="fake">Start with tblock-mode</span><small>handoff button, if VS Code supports it (unverified)</small></div>` + term(
+`<span class="p">$ </span>git branch --show-current
+<span class="a">131</span>-archive-missing-systems
+
+<span class="p">$ </span>${CLI()} issue view 131
+<span class="d">${LT_TITLE}
+Goal: Archive search should find a star system even
+when its archive record has been deleted.</span>
+
+<span class="g">✓</span> Goal taken from #131 · playbook: bug-fix`),
+    notes:['Either way works. That was a requirement: tblock-mode is optional for the work.']
+  },
+  {
+    id:'l-mr', short:'Opens MR', who:() => S.work === 'self' ? 'you' : 'main',
+    on:() => S.work === 'self' ? ['you','forge'] : ['main','forge'],
+    from:() => S.work === 'self' ? 'you' : 'main', to:'forge', msg:() => `${MRW()} · Related to #131`,
+    title:() => `The ${MRW()} links the ticket, without closing it`,
+    text:() => `The ${MRW()} description ends with <strong>Related to #131</strong>. Threepio still drafts the progress comment and any follow-ups, as in the built flow.`,
+    more:() => `Words like Closes, Fixes, or Resolves would make ${forgeName()} close #131 at merge, before threepio gets to check it.`,
+    rule:'No Closes, Fixes, or Resolves. Threepio always closes the ticket itself.',
+    src:'Proposed · change to the Opening an MR playbook',
+    screenTitle:() => `${forgeName()} · ${MRW()} ${MRN()}`,
+    screen:() => ticket({
+      title:'fix(archive): find systems whose archive record was deleted',
+      labels:['team-archives'],
+      body:`<h4>Why</h4><p>Archive search returned nothing for a system whose record was deleted, though the nav survey still has it.</p>
+<h4>What changed</h4><ul><li><code>findSystem()</code> falls back to the navigation survey and marks the result <code>recordRemoved</code>.</li></ul>
+<h4>Verification</h4><ul><li><code>npm test -- archive</code>: 22 passed.</li></ul>
+<p class="add"><b>Related to #131</b></p>`
+    }, { state:'mr', why:`<b>Not</b> <s>Closes #131</s>. That would close the ticket at merge, before threepio checks "Done when".` }),
+    notes:['This is the one change the built playbook needs: it writes Closes today.']
+  },
+  {
+    id:'l-babysit', short:'Babysit', who:'main', on:['main','forge','you'], from:'main', to:'forge', msg:'babysit to merge-ready',
+    title:'Babysit gets it to merge-ready, then you merge',
+    text:() => `You invoke tblock-mode's babysit playbook on the ${MRW()}. It clears conflicts, review threads, and CI until ${forgeName()} says the ${MRW()} can merge.`,
+    more:`Babysitting never merges. That stays your call.`,
+    rule:'Babysit stops at merge-ready. You merge.',
+    src:'skills/tblock-mode/playbooks/babysit.md (built)',
+    screenTitle:() => `tblock-mode · babysit · ${CLI()}`,
+    screen:() => term(gh()
+? `<span class="p">$ </span>gh pr checks 58
+<span class="g">✓</span> All checks were successful
+
+<span class="p">$ </span>gh pr view 58 --json mergeStateStatus,reviewDecision
+{ "mergeStateStatus": <span class="g">"CLEAN"</span>, "reviewDecision": <span class="g">"APPROVED"</span> }`
+: `<span class="p">$ </span>glab ci status
+<span class="g">✓</span> Pipeline #9921 passed
+
+<span class="p">$ </span>glab mr view 58 --output json | jq .detailed_merge_status
+<span class="g">"mergeable"</span>`) + agent(`${MRW()} ${MRN()} is merge-ready: green, mergeable, no open threads. Merging is your call.`) + you('Merged.'),
+    notes:['This part already exists in tblock today.']
+  },
+  {
+    id:'l-close', short:'Closes', who:'threepio', on:['you','threepio','forge'], from:'threepio', to:'forge', msg:'check, then close',
+    title:'Threepio closes it out',
+    text:() => `You say "close out 131". Threepio checks that the ${MRW()} merged into main, ticks each "Done when" item against real evidence, and lists any follow-ups still open.`,
+    more:`Then it shows the closing comment and asks before it closes anything.`,
+    rule:'It closes only on evidence, and only after your yes.',
+    src:'Proposed · ticket-up, close out',
+    screenTitle:() => `threepio · ${CLI()}`,
+    screen:() => {
+      const c = S.close;
+      let out = you('Threepio, close out 131.') + term(gh()
+? `<span class="p">$ </span>gh pr view 58 --json state,baseRefName
+{ "state": <span class="g">"MERGED"</span>, "baseRefName": "main" }
+
+<span class="p">$ </span>gh issue view 131 --json state
+{ "state": "OPEN" }   <span class="d">← still open, as planned</span>`
+: `<span class="p">$ </span>glab mr view 58 --output json | jq '.state, .target_branch'
+<span class="g">"merged"</span>
+"main"
+
+<span class="p">$ </span>glab issue view 131
+<span class="d">#131 · open   ← still open, as planned</span>`) +
+      `<div class="block checks"><div class="k">Done when</div>
+        <div class="row"><span class="m">✓</span><span>Searching for Kamino returns the system, flagged as removed.</span><small>${MRW()} ${MRN()} Verification · seeded index search</small></div>
+        <div class="row"><span class="m">✓</span><span>A regression test covers a system with a removed record.</span><small>test/search.removed.test.ts · passed on main</small></div>
+        <div class="row"><span class="m">✓</span><span>The holomap shows the flag.</span><small>screenshot in ${MRW()} ${MRN()}</small></div>
+        <div class="row"><span class="m open">○</span><span>Follow-up #147, "Log who deletes Archive records", is still open.</span><small>stays open; it's separate work</small></div>
+      </div>` +
+      droid(`Every item accounted for. I could almost weep.`, `Close #131 with a comment listing the three checks and the open follow-up?`) +
+      `<div class="answers" role="group" aria-label="Close the ticket">
+        <button type="button" id="close-yes" class="primary" data-close="close" aria-pressed="${c === 'close'}">Close it</button>
+        <button type="button" id="close-no" data-close="leave" aria-pressed="${c === 'leave'}">Leave it open</button>
+      </div>`;
+      if (!c) return out + '<div class="hint">Pick an answer.</div>';
+      out += you(c === 'close' ? 'Close it.' : 'Leave it open for now.');
+      out += c === 'leave'
+        ? term(`<span class="d">No commands run. #131 stays open, and the closing comment is kept as a draft.</span>`)
+        : term(gh()
+? `<span class="p">$ </span>gh issue comment 131 --body-file /tmp/tblock/131-close.md
+<span class="g">✓</span> https://github.com/${REPO}/issues/131#issuecomment-2219870
+<span class="p">$ </span>gh issue close 131 --reason completed
+<span class="g">✓</span> Closed issue #131`
+: `<span class="p">$ </span>glab issue note 131 --message "$(cat /tmp/tblock/131-close.md)"
+<span class="g">✓</span> https://gitlab.com/${REPO}/-/issues/131#note_88941
+<span class="p">$ </span>glab issue close 131
+<span class="g">✓</span> Closed issue #131`);
+      return out;
+    },
+    notes:['The "Done when" list from the very first draft comes back here as the checklist.','Let someone pick close or leave.']
+  },
+  {
+    id:'l-blocks', short:'Won\'t close', who:'threepio', on:['threepio'], from:'threepio',
+    title:'When it won\'t close a ticket',
+    text:`Close-out is where a wrong guess costs the most, so threepio stops and asks whenever the evidence is missing.`,
+    more:`In every case below it comments or reports, and the ticket stays open.`,
+    rule:'When in doubt it comments and asks. It never closes on a guess.',
+    src:'Proposed · ticket-up, close out',
+    screenTitle:'threepio · close-out guards',
+    screen:() => `<div class="cases">
+      <div class="case"><b>The ${MRW()} was closed, not merged</b><span>Nothing landed, so the work isn't done.</span><span class="then">Reports it, ticket stays open</span></div>
+      <div class="case"><b>A "Done when" item isn't met</b><span>For example, no screenshot shows the holomap flag.</span><span class="then">Lists the gap, asks you</span></div>
+      <div class="case"><b>Another ${MRW()} for #131 is still open</b><span>A branch like <code>131-part-2</code> hasn't merged yet.</span><span class="then">Waits for the last one</span></div>
+      <div class="case"><b>${forgeName()} can't be reached</b><span>Not logged in, or the network is down.</span><span class="then">Says so, claims nothing</span></div>
+    </div>`,
+    notes:['This is what makes "threepio always closes tickets" safe.']
+  },
+  {
+    id:'l-recap', short:'Recap', who:'threepio', on:['you','threepio','main','forge'], from:null,
+    title:'Who does what',
+    text:() => `Threepio owns the ticket from first draft to close. tblock-mode is there if you want it for the work, the ${MRW()}, and babysitting. You approve each step and do the merge.`,
+    more:`Still to check before building: whether VS Code's agent picker shows plugin agents, whether handoff buttons work, and whether the agent file can limit threepio's tools.`,
+    rule:'Threepio never edits code, pushes code, or merges.',
+    src:'Proposed flow, agreed 11 Nov 2026',
+    screenTitle:'summary',
+    screen:() => `<div class="tbl"><table class="roles">
+      <thead><tr><th></th><th>threepio</th><th>tblock-mode</th><th>You</th></tr></thead>
+      <tbody>
+        <tr><td>Write and refine the ticket</td><td class="yes">Yes</td><td class="no">—</td><td class="yes">Describe, edit</td></tr>
+        <tr><td>Create the ticket</td><td class="yes">After your yes</td><td class="no">—</td><td class="yes">Approve</td></tr>
+        <tr><td>Create the branch</td><td class="yes">After your yes</td><td class="no">—</td><td class="yes">Approve</td></tr>
+        <tr><td>Do the work</td><td class="no">Never</td><td class="yes">Optional</td><td class="yes">Or you</td></tr>
+        <tr><td>Open the ${MRW()}</td><td class="no">Drafts the comment</td><td class="yes">Playbook</td><td class="yes">Or you</td></tr>
+        <tr><td>Babysit to merge-ready</td><td class="no">—</td><td class="yes">Yes</td><td class="no">—</td></tr>
+        <tr><td>Merge</td><td class="no">Never</td><td class="no">Never</td><td class="yes">Yes</td></tr>
+        <tr><td>Close the ticket</td><td class="yes">After your yes</td><td class="no">—</td><td class="yes">Approve</td></tr>
+      </tbody></table></div>`,
+    notes:['End on the open questions so nobody thinks this ships today.']
+  }
+];
+
+const FLOWS = {
+  done: {
+    steps:STEPS_DONE, order:['you', 'main', 'threepio', 'forge'],
+    status:['green', 'Built'],
+    title:'Threepio drafts the tickets when the work is done',
+    lead:'tblock-mode fixes a bug in the Jedi Archives, then hands the paperwork to threepio. It drafts the tickets in a grumbling protocol-droid voice, and a person says yes before anything is posted.',
+    info:() => ({ you:['You','approve'], main:['Main agent','tblock-mode'], threepio:['threepio','subagent'], forge:[forgeName(),'issues'] }),
+    who:{ main:'Main agent', threepio:'threepio', you:'You' }
+  },
+  life: {
+    steps:STEPS_LIFE, order:['you', 'threepio', 'main', 'forge'],
+    status:['amber', 'Proposed, not built yet'],
+    title:'Threepio owns the ticket, from first draft to close',
+    lead:'You talk to threepio in the VS Code chat. It writes the ticket, starts the branch, and closes the ticket once the merge proves the work is done. You say yes at every step, and tblock-mode is optional for the work.',
+    info:() => ({ you:['You','ask, approve'], threepio:['threepio','chat agent'], main:['tblock-mode','optional'], forge:[forgeName(),`issues, ${MRW()}s`] }),
+    who:{ main:'tblock-mode', threepio:'threepio', you:'You' }
+  }
+};
+const steps = () => FLOWS[S.flow].steps;
+const order = () => FLOWS[S.flow].order;
+
+const val = v => typeof v === 'function' ? v() : v;
+
+function renderActors(step) {
+  const info = FLOWS[S.flow].info();
+  const on = val(step.on);
+  $('#actors').innerHTML = order().map(a => `<div class="actor${on.includes(a) ? ' on' : ''}" data-a="${a}">
+    <div class="badge">${ICON[a]}</div><b>${esc(info[a][0])}</b><small>${esc(info[a][1])}</small></div>`).join('');
+}
+
+let lastStep = -1;
+function moveDot(step, animate) {
+  const mover = $('#mover'), dot = $('#dot'), lit = $('#lit'), chip = $('#msgchip');
+  const to = val(step.to), from = val(step.from);
+  const f = order().indexOf(from), t = to ? order().indexOf(to) : -1;
+  if (t >= 0 && step.msg) {
+    chip.textContent = val(step.msg);
+    chip.style.left = `${(t - Math.sign(t - f) * 0.5) * 25 + 12.5}%`;
+    chip.classList.remove('show');
+    if (animate) void chip.offsetWidth;
+    chip.classList.add('show');
+  } else chip.classList.remove('show');
+  dot.classList.toggle('show', f >= 0);
+  dot.classList.toggle('pulse', f >= 0 && t < 0);
+  if (t >= 0) {
+    const lo = Math.min(f, t), hi = Math.max(f, t);
+    lit.style.left = `calc(${lo * 25 + 12.5}%)`;
+    lit.style.width = `${(hi - lo) * 25}%`;
+    lit.classList.add('show');
+  } else lit.classList.remove('show');
+  if (f < 0) return;
+  mover.classList.remove('go');
+  mover.style.setProperty('--x', f);
+  if (t >= 0 && animate) {
+    void mover.offsetWidth;
+    mover.classList.add('go');
+    mover.style.setProperty('--x', t);
+  } else if (t >= 0) {
+    mover.style.setProperty('--x', t);
+  }
+}
+
+function render(animate = true) {
+  const STEPS = steps();
+  const step = STEPS[S.i];
+  const key = S.flow + S.i;
+  const moved = lastStep !== key;
+  renderActors(step);
+  moveDot(step, animate && moved);
+
+  const who = val(step.who);
+  const whoLabel = FLOWS[S.flow].who[who];
+  $('#story').innerHTML = `
+    <div class="meter" aria-hidden="true"><i style="--p:${(S.i + 1) / STEPS.length}"></i></div>
+    <div class="step-eyebrow">Step ${S.i + 1} of ${STEPS.length}<span class="pill ${who}">${whoLabel}</span></div>
+    <h2>${val(step.title)}</h2>
+    <p>${val(step.text)}</p>
+    <p>${val(step.more)}</p>
+    <div class="reply"><span class="k">The rule</span><span class="v">${val(step.rule)}</span><span class="src">${esc(step.src)}</span></div>
+    ${S.notes ? `<div class="notes"><span class="k">Speaker notes</span><ul>${step.notes.map(n => `<li>${n}</li>`).join('')}</ul></div>` : ''}`;
+
+  $('#screen-title').textContent = val(step.screenTitle);
+  $('#screen-panel').dataset.who = who;
+  $('#speaker').className = `pill speaker ${who}`;
+  $('#speaker-name').textContent = whoLabel;
+  const screen = $('#screen');
+  screen.innerHTML = val(step.screen);
+  if (animate && moved) { screen.classList.remove('enter'); void screen.offsetWidth; screen.classList.add('enter'); }
+
+  const F = FLOWS[S.flow];
+  document.querySelectorAll('[data-flow]').forEach(b => b.setAttribute('aria-current', b.dataset.flow === S.flow ? 'page' : 'false'));
+  $('#flow-title').textContent = F.title;
+  $('#flow-lead').innerHTML = F.lead;
+  const sp = $('#status-pill'); sp.className = `pill ${F.status[0]}`; sp.textContent = F.status[1];
+  $('#harness-ctl').hidden = S.flow === 'life';
+  $('#stepcount').textContent = `${S.i + 1} / ${STEPS.length}`;
+
+  const list = $('#steps');
+  list.innerHTML = STEPS.map((s, i) => `<button type="button" role="tab" class="step-btn${i < S.i ? ' done' : ''}" data-i="${i}" ${i === S.i ? 'aria-current="step" aria-selected="true"' : 'aria-selected="false"'}><span class="n">${i + 1}</span><span>${esc(s.short)}</span></button>`).join('');
+  const cur = list.querySelector('[aria-current="step"]');
+  if (cur && (cur.offsetTop < list.scrollTop || cur.offsetTop + cur.offsetHeight > list.scrollTop + list.clientHeight)) list.scrollTop = cur.offsetTop - list.clientHeight / 2;
+
+  $('#prev').disabled = S.i === 0;
+  $('#next').disabled = S.i === STEPS.length - 1;
+  document.querySelectorAll('[data-harness]').forEach(b => b.setAttribute('aria-pressed', b.dataset.harness === S.harness));
+  document.querySelectorAll('[data-forge]').forEach(b => b.setAttribute('aria-pressed', b.dataset.forge === S.forge));
+  $('#notes-btn').setAttribute('aria-pressed', S.notes);
+  applyTheme();
+
+  lastStep = key;
+  const h = '#' + step.id;
+  if (location.hash !== h) { try { history.replaceState(null, '', h); } catch (e) {} }
+}
+
+function go(i) {
+  const STEPS = steps();
+  i = Math.max(0, Math.min(STEPS.length - 1, i));
+  if (STEPS[S.i].id === 'approve' && i > S.i && !S.choice) S.choice = 'yes';
+  if (STEPS[S.i].onLeave && i > S.i) STEPS[S.i].onLeave();
+  S.i = i; render();
+}
+function setFlow(f) {
+  if (f === S.flow) return;
+  S.flow = f; S.i = 0; render();
+}
+
+document.addEventListener('click', e => {
+  const pill = e.target.closest('[data-i]'); if (pill) return go(+pill.dataset.i);
+  const h = e.target.closest('[data-harness]'); if (h) { S.harness = h.dataset.harness; save(); return render(false); }
+  const f = e.target.closest('[data-forge]'); if (f) { S.forge = f.dataset.forge; save(); return render(false); }
+  if (e.target.closest('#theme-btn')) return setTheme(currentTheme() === 'light' ? 'dark' : 'light');
+  const c = e.target.closest('[data-choice]'); if (c) { S.choice = c.dataset.choice; return render(false); }
+  const fl = e.target.closest('[data-flow]'); if (fl) return setFlow(fl.dataset.flow);
+  const w = e.target.closest('[data-work]'); if (w) { S.work = w.dataset.work; return render(false); }
+  const cl = e.target.closest('[data-close]'); if (cl) { S.close = cl.dataset.close; return render(false); }
+  if (e.target.closest('#prev')) return go(S.i - 1);
+  if (e.target.closest('#next')) return go(S.i + 1);
+  if (e.target.closest('#notes-btn')) { S.notes = !S.notes; save(); return render(false); }
+});
+document.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if (k === 'ArrowRight' || k === 'PageDown' || (k === ' ' && !e.target.closest('button'))) { e.preventDefault(); go(S.i + 1); }
+  else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); go(S.i - 1); }
+  else if (k === 'Home') go(0);
+  else if (k === 'End') go(steps().length - 1);
+  else if (k === 'l' || k === 'L') setFlow(S.flow === 'done' ? 'life' : 'done');
+  else if (k === '1') setFlow('done');
+  else if (k === '2') setFlow('life');
+  else if (k === 'n' || k === 'N') { S.notes = !S.notes; save(); render(false); }
+  else if (k === 'h' || k === 'H') { S.harness = S.harness === 'cc' ? 'cp' : 'cc'; save(); render(false); }
+  else if (k === 'f' || k === 'F') { S.forge = S.forge === 'gh' ? 'gl' : 'gh'; save(); render(false); }
+  else if (k === 't' || k === 'T') setTheme(currentTheme() === 'light' ? 'dark' : 'light');
+});
+function findHash() {
+  for (const f of Object.keys(FLOWS)) {
+    const i = FLOWS[f].steps.findIndex(s => '#' + s.id === location.hash);
+    if (i >= 0) return { f, i };
+  }
+  return null;
+}
+window.addEventListener('hashchange', () => {
+  const h = findHash();
+  if (h && (h.f !== S.flow || h.i !== S.i)) { S.flow = h.f; S.i = h.i; render(); }
+});
+const start = findHash();
+if (start) { S.flow = start.f; S.i = start.i; }
+render(false);
+</script>
