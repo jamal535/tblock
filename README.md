@@ -73,7 +73,7 @@ a preset sets every role's model and effort at once.
 
 | preset | for | shape |
 | --- | --- | --- |
-| `max` | hard design, risky changes | top models, high to max effort, three-seat panels |
+| `max` | hard design, risky changes | top models, high to max effort, three-seat panels. in claude code, fable takes `hardest` and a panel seat |
 | `balanced` | features and reviews (default) | top models think, strong models do the work |
 | `lean` | everyday bugs and small changes | strong models, medium effort |
 
@@ -102,7 +102,7 @@ a few rules of thumb:
 - put your strongest model on `hardest` and `judgment`. they run rarely.
 - give `judgment` a different family from `code`, so a second family checks the work.
 - use a fast model for `swarm workers`. many run at once.
-- in copilot, seat two or more families on each panel. claude code runs only claude models, so its panels mix opus, sonnet and haiku, and each reviewer gets its own lens.
+- in copilot, seat two or more families on each panel. claude code runs only claude models, so its panels mix tiers, and each reviewer gets its own lens. `max` adds fable, which counts as its own family.
 
 with no roles file, every subagent runs on the session model.
 

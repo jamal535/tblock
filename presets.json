@@ -3,6 +3,7 @@
   "families": ["claude", "gpt", "gemini"],
   "tiers": ["top", "strong", "fast"],
   "aliases": { "extreme": "max", "high": "balanced", "efficient": "lean" },
+  "models": { "claude-code": ["opus", "sonnet", "haiku", "fable"] },
   "presets": {
     "max": {
       "blurb": "Hard design and risky changes: top models, high to max effort",
@@ -16,11 +17,12 @@
         "shootout judges": { "panel": 3, "tier": "top", "effort": "xhigh" }
       },
       "claude-code": {
+        "hardest": { "model": "fable", "effort": "max" },
         "code": { "family": "claude", "tier": "top", "effort": "high" },
         "swarm workers": { "family": "claude", "tier": "strong", "effort": "medium" },
-        "reviewers": { "seats": ["claude-top", "claude-strong", "claude-fast"], "effort": "xhigh" },
-        "shootout runners": { "seats": ["claude-top", "claude-strong", "claude-fast"], "effort": "xhigh" },
-        "shootout judges": { "seats": ["claude-top", "claude-strong", "claude-fast"], "effort": "xhigh" }
+        "reviewers": { "seats": ["fable", "claude-top", "claude-strong"], "effort": "xhigh" },
+        "shootout runners": { "seats": ["fable", "claude-top", "claude-strong"], "effort": "xhigh" },
+        "shootout judges": { "seats": ["fable", "claude-top", "claude-strong"], "effort": "xhigh" }
       }
     },
     "balanced": {

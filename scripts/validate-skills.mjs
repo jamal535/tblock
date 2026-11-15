@@ -145,8 +145,14 @@ export function validate(root) {
     const seatKeys = (data.families || []).flatMap((f) => (data.tiers || []).map((t) => `${f}-${t}`));
     const checkRole = (where, want) => {
       if (!data.efforts.includes(want.effort)) errors.push(`presets.json: ${where} effort ${want.effort} is not a known effort`);
+      // A harness with fixed models, such as Claude Code, may name one directly.
+      const fixed = data.models?.[where.split('.')[1]] || [];
       if (want.seats) {
-        want.seats.filter((k) => !seatKeys.includes(k)).forEach((k) => errors.push(`presets.json: ${where} seat ${k} is not a family-tier`));
+        want.seats.filter((k) => !seatKeys.includes(k) && !fixed.includes(k)).forEach((k) => errors.push(`presets.json: ${where} seat ${k} is not a family-tier${fixed.length ? ` or one of ${fixed.join(', ')}` : ''}`));
+        return;
+      }
+      if (want.model) {
+        if (!fixed.includes(want.model)) errors.push(`presets.json: ${where} names model ${want.model}, which ${where.split('.')[1]} does not have`);
         return;
       }
       if (!tiers.includes(want.tier)) errors.push(`presets.json: ${where} tier ${want.tier} is not a known tier`);

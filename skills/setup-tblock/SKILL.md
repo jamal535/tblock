@@ -34,7 +34,7 @@ A preset sets every role at once, from tiers (top, strong, fast) per family (cla
 
 | Preset | Use for | Shape |
 | --- | --- | --- |
-| `max` | Hard design, risky changes | Top models, high to max effort, three-seat panels |
+| `max` | Hard design, risky changes | Top models, high to max effort, three-seat panels. In Claude Code, Fable takes `hardest` and a panel seat |
 | `balanced` | Features and reviews (the default) | Top models on `hardest` and `judgment`, strong elsewhere, two-seat panels |
 | `lean` | Everyday bugs and small changes | Strong models on thinking roles, the session model for `code`, medium effort |
 

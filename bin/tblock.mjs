@@ -74,8 +74,10 @@ function pickHarness(file, models = []) {
   throw new Error(`say which harness this is for: add --harness=${HARNESSES.join(' or --harness=')}`);
 }
 
+// Fable counts as its own family, apart from the other Claude models, as pstack treats it.
 const family = (model) =>
-  /claude|opus|sonnet|haiku|fable/i.test(model) ? 'anthropic'
+  /fable/i.test(model) ? 'fable'
+    : /claude|opus|sonnet|haiku/i.test(model) ? 'anthropic'
     : /gpt|codex|^o\d/i.test(model) ? 'openai'
       : /gemini/i.test(model) ? 'google'
         : /grok/i.test(model) ? 'xai'
@@ -283,11 +285,15 @@ function resolvePreset(name, tiers, specs, harness, shift = 0) {
     if (want.seats) {
       // A harness's own panel names each seat's family and tier.
       roles[role] = want.seats.map((key) => {
+        // A seat that names a model, such as fable, seats it as it is: Claude Code's models are fixed.
+        if (!key.includes('-')) return { model: key, effort };
         const [fam, tier] = key.split('-');
         const pick = pickModel(tiers, fam, tier) || pickModel(tiers, families[0], tier);
         if (pick.model !== tiers[key]) notes.push(`${role}: no ${key}, used ${pick.model}`);
         return { model: pick.model, effort };
       });
+    } else if (want.model) {
+      roles[role] = [{ model: want.model, effort }];
     } else if (want.tier === 'session') {
       roles[role] = [{ model: 'session', effort }];
     } else if (want.panel) {

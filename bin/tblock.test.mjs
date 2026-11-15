@@ -633,7 +633,9 @@ test('a Claude Code panel seats different tiers when it has one family', () => {
   assert.equal(find(doctorJson(cli), 'Roles').some((c) => /no model diversity/.test(c.detail)), false, 'one family is all Claude Code has, so doctor does not warn about it');
 
   cli('preset', 'max');
-  assert.match(rolesText(home), /^reviewers: opus @ xhigh, sonnet @ xhigh, haiku @ xhigh$/m);
+  assert.match(rolesText(home), /^reviewers: fable @ xhigh, opus @ xhigh, sonnet @ xhigh$/m, 'max seats fable, its own family');
+  assert.match(rolesText(home), /^hardest: fable @ max$/m);
+  assert.ok(find(doctorJson(cli), 'Roles').some((c) => /2 families/.test(c.detail)), 'doctor counts fable apart');
 });
 
 test('the old preset names still work, and a file that records one has no false edits', () => {
@@ -660,7 +662,7 @@ test('--effort moves every role along the effort ladder and is remembered for ed
   assert.match(rolesText(home), /^swarm workers: haiku @ medium$/m);
   assert.deepEqual(JSON.parse(cli('preset', 'balanced', '--effort=+1', '--dry-run', '--json').out).harnesses['claude-code'].edits, []);
   cli('preset', 'max', '--effort=+3');
-  assert.match(rolesText(home), /^hardest: opus @ max$/m, 'the ladder stops at max');
+  assert.match(rolesText(home), /^judgment: opus @ max$/m, 'the ladder stops at max');
   cli('preset', 'lean', '--effort=-1');
   assert.match(rolesText(home), /^swarm workers: haiku @ minimal$/m);
   assert.equal(cli('preset', 'lean', '--effort=lots').code, 2);
@@ -674,9 +676,9 @@ test('preset lists each preset with this harness\'s models', () => {
   cli('tiers', 'set', '--harness=claude-code', 'claude-top=opus', 'claude-strong=sonnet', 'claude-fast=haiku');
   const out = JSON.parse(cli('preset', '--json', '--harness=claude-code').out);
   assert.deepEqual(out.presets.map((p) => p.name), ['max', 'balanced', 'lean']);
-  assert.deepEqual(out.presets.find((p) => p.name === 'max').roles.hardest, [{ model: 'opus', effort: 'max' }]);
+  assert.deepEqual(out.presets.find((p) => p.name === 'max').roles.hardest, [{ model: 'fable', effort: 'max' }]);
   const text = cli('preset', '--harness=claude-code').out;
-  assert.match(text, /thinks opus @ max/);
+  assert.match(text, /thinks fable @ max/);
   assert.doesNotMatch(text, /cost/);
 });
 
