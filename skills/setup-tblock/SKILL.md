@@ -20,9 +20,9 @@ If you can't tell, ask. The roles file has one section per harness, because the 
 | --- | --- |
 | `code` | Delegated changes in Feature, Bug fix, Perf issue, and Hillclimb |
 | `hardest` | Feature and Bug fix work in cross-cutting design, concurrency, or subtle algorithms |
-| `judgment` | The `how` explainer, and judging delegated work in figure-it-out |
+| `judgment` | Judging delegated work in figure-it-out |
 | `reviewers` | A panel for `interrogate` and `ui-council`: one reviewer per entry, from different families where the harness has them |
-| `swarm workers` | `swarm` workers and `how` explorers |
+| `swarm workers` | `swarm` workers |
 | `shootout runners` | A panel for `shootout`, and for `swarm` model races: one attempt per entry |
 | `shootout judges` | A pool for `shootout`: one judge per run, from a family that differs from the runners where possible |
 

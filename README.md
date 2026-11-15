@@ -94,7 +94,7 @@ a preset never quietly resets a role you changed by hand. it lists them, and `--
 | `hardest` | cross-cutting design, concurrency, subtle algorithms |
 | `judgment` | explanations, and judging other agents' work |
 | `reviewers` | the `interrogate` and `ui-council` panels |
-| `swarm workers` | `swarm` workers and `how` explorers |
+| `swarm workers` | `swarm` workers |
 | `shootout runners` / `judges` | `shootout` attempts and their judges |
 
 a few rules of thumb:

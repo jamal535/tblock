@@ -8,7 +8,7 @@ At standard and deep size, each trigger below fires when its condition is met. T
 
 **Understand and decide**
 
-- Nontrivial change, architecture decision, or "are we sure?" → the [how](../how/SKILL.md) skill, and the [why](../why/SKILL.md) skill when the question is about motivation or history.
+- Nontrivial change, architecture decision, or "are we sure?" → trace the code yourself first, and use the [why](../why/SKILL.md) skill when the question is about motivation or history.
 - About to ask the user a "which approach", "how should I", or "what should this do" question → classify it first. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf), it is not the user's to answer. Sketch it with the [Prototype](playbooks/prototype.md) playbook and let the result decide. A read-only Investigation answers from the evidence instead. Reserve the question for a real product or preference call no experiment can settle, and ask it in plain words, never with a shorthand token to type back.
 - Contested design, or a fix you don't fully trust → the [interrogate](../interrogate/SKILL.md) skill before shipping. A change whose effects reach past its diff → [blast-radius](../blast-radius/SKILL.md).
 
@@ -129,7 +129,6 @@ Route to a skill below when its intent fits better than any playbook.
 | Sketch types and module shape before implementing | [architect](../architect/SKILL.md) |
 | Read the app's logs, or set up log reading for a project | [probe](../probe/SKILL.md) |
 | Build or update a project's Grafana dashboard | [grafana-dashboard](../grafana-dashboard/SKILL.md) |
-| Explain how code works, or where something should live | [how](../how/SKILL.md) |
 | Why code is this way: rationale, regressions, history | [why](../why/SKILL.md) |
 | Explain a body of work so a person understands it | [teach](../teach/SKILL.md) |
 | Find what a change could break beyond its diff | [blast-radius](../blast-radius/SKILL.md) |
